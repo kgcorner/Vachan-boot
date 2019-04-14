@@ -1,6 +1,6 @@
-package com.kgcorner.vachan.vachan.services;
+package com.kgcorner.vachan.services;
 
-import com.kgcorner.vachan.vachan.data.Image;
+import com.kgcorner.vachan.data.Image;
 
 import java.util.List;
 

@@ -16,14 +16,15 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<spring-cloud.version>Finchley.SR1</spring-cloud.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-dependencies</artifactId>
+			<version>${spring-cloud.version}</version>
 			<type>pom</type>
-			<version>2.0.0.M3</version>
 			<scope>import</scope>
 		</dependency>
 		<dependency>
@@ -36,15 +37,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
+			<version>2.0.1.RELEASE</version>
 		</dependency>
 
 
@@ -75,7 +69,33 @@
 			<artifactId>spring-cloud-openfeign-core</artifactId>
 			<version>2.0.1.RELEASE</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>2.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-reflect -->
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-reflect</artifactId>
+			<version>2.0.0</version>
+			<scope>test</scope>
+		</dependency>
 
+		<!--<dependency>-->
+			<!--<groupId>org.powermock</groupId>-->
+			<!--<artifactId>powermock-api-mockito</artifactId>-->
+			<!--<version>1.7.4</version>-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>2.0.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -83,6 +103,64 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.14.1</version>
+				<configuration>
+					<argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true ${itCoverageAgent}</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.6.0.1398</version>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.2</version>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<propertyName>itCoverageAgent</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<!--<execution>-->
+						<!--<id>default-check</id>-->
+						<!--<goals>-->
+							<!--<goal>check</goal>-->
+						<!--</goals>-->
+						<!--<configuration>-->
+							<!--<rules>-->
+								<!--&lt;!&ndash;  implementation is needed only for Maven 2  &ndash;&gt;-->
+								<!--<rule implementation="org.jacoco.maven.RuleConfiguration">-->
+									<!--<element>BUNDLE</element>-->
+									<!--<limits>-->
+										<!--&lt;!&ndash;  implementation is needed only for Maven 2  &ndash;&gt;-->
+										<!--<limit implementation="org.jacoco.report.check.Limit">-->
+											<!--<counter>COMPLEXITY</counter>-->
+											<!--<value>COVEREDRATIO</value>-->
+											<!--<minimum>0.10</minimum>-->
+										<!--</limit>-->
+									<!--</limits>-->
+								<!--</rule>-->
+							<!--</rules>-->
+
+						<!--</configuration>-->
+					<!--</execution>-->
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

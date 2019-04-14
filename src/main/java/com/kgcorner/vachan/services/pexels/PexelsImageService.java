@@ -1,6 +1,8 @@
-package com.kgcorner.vachan.vachan.services;
+package com.kgcorner.vachan.services.pexels;
 
-import com.kgcorner.vachan.vachan.data.Image;
+import com.google.gson.annotations.SerializedName;
+import com.kgcorner.vachan.data.Image;
+import com.kgcorner.vachan.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,9 @@ public class PexelsImageService implements ImageService {
 
     @Autowired
     private PexelsClient client;
-
     private static final int MAX_IMAGES_PER_PAGE = 20;
     private static final String PEXELS = "Pexels";
+
 
     @Override
     public List<Image> getImages(int page) {
@@ -34,7 +36,14 @@ public class PexelsImageService implements ImageService {
 
     @Override
     public List<Image> getImages(String topic, int page) {
-        return null;
+        PexelsResponse response = client.getPhotos(topic, MAX_IMAGES_PER_PAGE, page);
+        List<Image> images = new ArrayList<>();
+        for(Photo photo : response.getPhotos()) {
+            Image image = new Image(PEXELS, photo.getPhotographer(),
+                photo.getSrc().getLarge(), photo.getPhotographerUrl());
+            images.add(image);
+        }
+        return images;
     }
 
     @FeignClient(name = "data", url = "${pexel.search.uri}")
@@ -42,11 +51,11 @@ public class PexelsImageService implements ImageService {
 
         @RequestMapping(method = RequestMethod.GET)
         PexelsResponse getPhotos(@RequestParam("query") String query,
-                                        @RequestParam("per_page") int per_page,
-                                        @RequestParam("page") int page);
+                           @RequestParam("per_page") int perPage,
+                           @RequestParam("page") int page);
 
         @RequestMapping(method = RequestMethod.GET)
-        PexelsResponse getPhotos(@RequestParam("per_page") int per_page,
+        PexelsResponse getPhotos(@RequestParam("per_page") int perPage,
                                  @RequestParam("page") int page);
     }
 
@@ -87,6 +96,7 @@ public class PexelsImageService implements ImageService {
         private int height;
         private String url;
         private String photographer;
+        @SerializedName("photographer_url")
         private String photographerUrl;
         private ImageSrc src;
 

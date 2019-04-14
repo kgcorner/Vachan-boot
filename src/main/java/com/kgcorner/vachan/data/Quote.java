@@ -1,4 +1,5 @@
-package com.kgcorner.vachan.vachan.data;
+package com.kgcorner.vachan.data;
+
 
 import java.util.List;
 
@@ -36,8 +37,8 @@ public class Quote {
         if(!(obj instanceof Quote)) {
             return false;
         }
-        Quote quote = (Quote) obj;
-        return this.quote.equalsIgnoreCase(quote.quote);
+        Quote quoteObject = (Quote) obj;
+        return this.quote.equalsIgnoreCase(quoteObject.quote);
     }
 
     @Override

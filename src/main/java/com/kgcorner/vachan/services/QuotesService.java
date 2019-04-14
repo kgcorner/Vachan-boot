@@ -1,6 +1,6 @@
-package com.kgcorner.vachan.vachan.services;
+package com.kgcorner.vachan.services;
 
-import com.kgcorner.vachan.vachan.data.Quote;
+import com.kgcorner.vachan.data.Quote;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
