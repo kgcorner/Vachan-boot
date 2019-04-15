@@ -7,6 +7,15 @@ public class Quote {
     private String quote;
     private String author;
     private List<String> tags;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getQuote() {
         return quote;

@@ -68,6 +68,9 @@ public class QuoteDB {
 
     private static void populateQuotes() {
         quotes = readQuotes();
+        for (int i = 0; i < quotes.size(); i++) {
+            quotes.get(i).setId(i);
+        }
         topics = readTopics();
         LOGGER.debug("Quotes are loaded");
         LOGGER.debug("Indexing quotes");
