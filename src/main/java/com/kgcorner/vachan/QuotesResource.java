@@ -2,6 +2,7 @@ package com.kgcorner.vachan;
 
 import com.kgcorner.vachan.data.Image;
 import com.kgcorner.vachan.data.Quote;
+import com.kgcorner.vachan.data.Topic;
 import com.kgcorner.vachan.services.QuotesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,11 @@ public class QuotesResource {
             return getQuotes(1);
         }
         return service.getQuotes(topic, page);
+    }
+
+    @GetMapping("/topics")
+    public List<Topic> getTopics() {
+        return service.getTopics();
     }
 
     @GetMapping("/images")

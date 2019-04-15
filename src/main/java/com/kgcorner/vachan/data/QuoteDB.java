@@ -2,8 +2,8 @@ package com.kgcorner.vachan.data;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -13,6 +13,8 @@ import org.apache.log4j.Logger;
 public class QuoteDB {
     private static QuoteDB instance;
     private static  List<Quote> quotes;
+    private static List<Topic> topics;
+
     private static Map<String, List<Integer>> topicQuoteMapper = new HashMap<>();
 
     private static final Logger LOGGER = Logger.getLogger(QuoteDB.class);
@@ -66,6 +68,7 @@ public class QuoteDB {
 
     private static void populateQuotes() {
         quotes = readQuotes();
+        topics = readTopics();
         LOGGER.debug("Quotes are loaded");
         LOGGER.debug("Indexing quotes");
         topicQuoteMapper = mapQuotesWithTopics(quotes);
@@ -73,7 +76,8 @@ public class QuoteDB {
     }
 
     private static List<Quote> readQuotes() {
-        try(FileReader fileReader = new FileReader(QuoteDB.class.getResource("/quotes.json").getFile())) {
+
+        try(Reader fileReader = new InputStreamReader(QuoteDB.class.getResourceAsStream("/quotes.json"))) {
             Type quoteListType = new TypeToken<List<Quote>>() {
             }.getType();
             return new Gson().fromJson(fileReader, quoteListType);
@@ -81,6 +85,21 @@ public class QuoteDB {
             LOGGER.error(x.getMessage(), x);
         }
         return Collections.emptyList();
+    }
+
+    private static List<Topic> readTopics() {
+        try(Reader fileReader = new InputStreamReader(QuoteDB.class.getResourceAsStream("/category.json"))) {
+            Type quoteListType = new TypeToken<List<Topic>>() {
+            }.getType();
+            return new Gson().fromJson(fileReader, quoteListType);
+        } catch (IOException x) {
+            LOGGER.error(x.getMessage(), x);
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Topic> getTopics() {
+        return Collections.unmodifiableList(topics);
     }
 
     private static Map<String, List<Integer>>  mapQuotesWithTopics(List<Quote> quotes) {
@@ -100,5 +119,13 @@ public class QuoteDB {
             }
         }
         return topicQuoteMapper;
+    }
+
+    public List<Quote> getQuotes() {
+        return quotes;
+    }
+
+    public List<String> getAddedTags() {
+        return new ArrayList(topicQuoteMapper.keySet());
     }
 }

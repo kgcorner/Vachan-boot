@@ -1,0 +1,47 @@
+[
+  {
+    "name":"animal-love",
+    "imagePath":"https://s3.amazonaws.com/vachan/animal-love.jpg",
+    "tags":["animals","humanity",""]
+  },
+  {
+    "name":"happiness",
+    "imagePath":"https://s3.amazonaws.com/vachan/happiness.jpeg",
+    "tags":["happiness", "happy", "life", "self-love","cheerfull"]
+  },
+  {
+    "name":"humour",
+    "imagePath":"https://s3.amazonaws.com/vachan/humour.jpg",
+    "tags":["animals","happiness","humour","witty"]
+  },
+  {
+    "name":"inspiration",
+    "imagePath":"https://s3.amazonaws.com/vachan/inspiration.jpg",
+    "tags":["inspirational","motivating","leadership"]
+  },
+  {
+    "name":"motivation",
+    "imagePath":"https://s3.amazonaws.com/vachan/motivation.jpg",
+    "tags":["motivation","inspirational"]
+  },
+  {
+    "name":"philosophy",
+    "imagePath":"https://s3.amazonaws.com/vachan/philosophy.jpg",
+    "tags":["philosophy","life","success","happiness"]
+  },
+  {
+    "name":"science",
+    "imagePath":"https://s3.amazonaws.com/vachan/science.jpg",
+    "tags":["science","space"]
+  },
+  {
+    "name":"spirituality",
+    "imagePath":"https://s3.amazonaws.com/vachan/sprituality.jpg",
+    "tags":["meditation","yoga","Spirituality","god","eternal"]
+  },
+  {
+    "name":"work",
+    "imagePath":"https://s3.amazonaws.com/vachan/work.jpg",
+    "tags":["monday","work","duty","patritism","energy","boosting","motivational"]
+  }
+]

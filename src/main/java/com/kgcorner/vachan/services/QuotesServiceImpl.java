@@ -2,6 +2,7 @@ package com.kgcorner.vachan.services;
 
 import com.kgcorner.vachan.data.Quote;
 import com.kgcorner.vachan.data.QuoteDB;
+import com.kgcorner.vachan.data.Topic;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -53,5 +54,13 @@ public class QuotesServiceImpl implements QuotesService {
         else {
             return db.getQuotesFromTopic(topic, offset, MAX_QUOTES_PER_PAGE);
         }
+    }
+
+    /**
+     * Returns topics
+     * @return
+     */
+    public List<Topic> getTopics() {
+        return db.getTopics();
     }
 }
