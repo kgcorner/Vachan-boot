@@ -21,8 +21,6 @@ import java.util.*;
 import org.powermock.reflect.Whitebox;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockRunnerDelegate(SpringRunner.class)
-@PrepareForTest(QuoteDB.class)
 public class QuoteDbTest {
 
     private static QuoteDB quoteDB;
@@ -68,45 +66,31 @@ public class QuoteDbTest {
 
 
     @BeforeClass
-    public static void init() {
-        PowerMockito.spy(QuoteDB.class);
-        try {
-            PowerMockito.doNothing().when(QuoteDB.class, "populateQuotes");
-            quoteDB = QuoteDB.getInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void init() throws IllegalAccessException {
+        quoteDB = QuoteDB.getInstance();
+        Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
+        List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
+        Map<String, List<Integer>> topicQuoteMapper = new HashMap<>();
+        List<Integer> index = new ArrayList<>();
+        index.add(0);
+        topicQuoteMapper.put("Inspiration", index);
+
+        MemberModifier.field(QuoteDB.class, "quotes").set(null, quotesList);
+        MemberModifier.field(QuoteDB.class, "topicQuoteMapper").set(null, topicQuoteMapper);
     }
 
     @Test
     public void testGetQuote() throws IllegalAccessException {
-        Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
-        List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
-        Map<String, List<Integer>> topicQuoteMapper = new HashMap<>();
-        List<Integer> index = new ArrayList<>();
-        index.add(0);
-        topicQuoteMapper.put("Inspiration", index);
-
-        MemberModifier.field(QuoteDB.class, "quotes").set(null, quotesList);
-        MemberModifier.field(QuoteDB.class, "topicQuoteMapper").set(null, topicQuoteMapper);
-
         List<Quote> quotes = quoteDB.getQuotes(0,2);
         Assert.assertNotNull("Quotes are null", quotes);
         Assert.assertTrue("Quotes count are not matching", quotes.size() <= 2);
+        Assert.assertEquals("Quotes ise not matching","Genius is one percent " +
+            "inspiration and ninety-nine percent perspiration.", quotes.get(0).getQuote());
+        Assert.assertEquals("Author ise not matching","Thomas Edison", quotes.get(0).getAuthor());
     }
 
     @Test
     public void testGetQuoteForBeyondLimit() throws IllegalAccessException {
-        Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
-        List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
-        Map<String, List<Integer>> topicQuoteMapper = new HashMap<>();
-        List<Integer> index = new ArrayList<>();
-        index.add(0);
-        topicQuoteMapper.put("Inspiration", index);
-
-        MemberModifier.field(QuoteDB.class, "quotes").set(null, quotesList);
-        MemberModifier.field(QuoteDB.class, "topicQuoteMapper").set(null, topicQuoteMapper);
-
         List<Quote> quotes = quoteDB.getQuotes(50,2);
         Assert.assertNotNull("Quotes are null", quotes);
         Assert.assertTrue("Quotes count are not matching", quotes.size() == 0);
@@ -158,15 +142,6 @@ public class QuoteDbTest {
 
     @Test
     public void testGetQuotesForTopicForBeyondLimit() throws IllegalAccessException {
-        Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
-        List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
-        Map<String, List<Integer>> topicQuoteMapper = new HashMap<>();
-        List<Integer> index = new ArrayList<>();
-        index.add(0);
-        topicQuoteMapper.put("Inspiration", index);
-
-        MemberModifier.field(QuoteDB.class, "quotes").set(null, quotesList);
-        MemberModifier.field(QuoteDB.class, "topicQuoteMapper").set(null, topicQuoteMapper);
         List<Quote> quotes = quoteDB.getQuotesFromTopic("Inspirational", 50, 2);
         Assert.assertNotNull("Quotes are null", quotes);
         Assert.assertTrue("Quotes count are not matching", quotes.size() == 0);
@@ -174,16 +149,6 @@ public class QuoteDbTest {
 
     @Test
     public void testGetQuotesForTopicWithEmptyTopic() throws IllegalAccessException {
-        Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
-        List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
-        Map<String, List<Integer>> topicQuoteMapper = new HashMap<>();
-        List<Integer> index = new ArrayList<>();
-        index.add(0);
-        topicQuoteMapper.put("Inspiration", index);
-
-        MemberModifier.field(QuoteDB.class, "quotes").set(null, quotesList);
-        MemberModifier.field(QuoteDB.class, "topicQuoteMapper").set(null, topicQuoteMapper);
-
         Exception thrownException = null;
         try {
             List<Quote> quotes = quoteDB.getQuotesFromTopic("", 0, 2);
@@ -197,16 +162,6 @@ public class QuoteDbTest {
 
     @Test
     public void testGetQuotesForTopicWithUnExpectedTopic() throws IllegalAccessException {
-        Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
-        List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
-        Map<String, List<Integer>> topicQuoteMapper = new HashMap<>();
-        List<Integer> index = new ArrayList<>();
-        index.add(0);
-        topicQuoteMapper.put("Inspiration", index);
-
-        MemberModifier.field(QuoteDB.class, "quotes").set(null, quotesList);
-        MemberModifier.field(QuoteDB.class, "topicQuoteMapper").set(null, topicQuoteMapper);
-
         List<Quote> quotes = quoteDB.getQuotesFromTopic("un-matchable", 0, 2);
         Assert.assertNotNull("Quotes are null", quotes);
         Assert.assertTrue("Quotes count are not matching for un-matching ", quotes.size() == 0);
@@ -214,15 +169,6 @@ public class QuoteDbTest {
 
     @Test
     public void testGetQuotesForTopicWithNullTopic() throws IllegalAccessException {
-        Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
-        List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
-        Map<String, List<Integer>> topicQuoteMapper = new HashMap<>();
-        List<Integer> index = new ArrayList<>();
-        index.add(0);
-        topicQuoteMapper.put("Inspiration", index);
-
-        MemberModifier.field(QuoteDB.class, "quotes").set(null, quotesList);
-        MemberModifier.field(QuoteDB.class, "topicQuoteMapper").set(null, topicQuoteMapper);
         Exception thrownException = null;
         try {
             List<Quote> quotes = quoteDB.getQuotesFromTopic(null, 0, 2);
@@ -264,12 +210,7 @@ public class QuoteDbTest {
 
     @Test
     public void testPopulateQuote() {
-        PowerMockito.spy(QuoteDB.class);
         try {
-            Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
-            List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
-            PowerMockito.doCallRealMethod().when(QuoteDB.class, "populateQuotes");
-            PowerMockito.doReturn(quotesList).when(QuoteDB.class, "readQuotes");
             Whitebox.invokeMethod(QuoteDB.class, "populateQuotes");
             List<Quote> quotes = quoteDB.getQuotesFromTopic("Inspiration", 0, 5);
             Assert.assertNotNull("Quotes are null for topic inspiration", quotes);
@@ -281,12 +222,7 @@ public class QuoteDbTest {
 
     @Test
     public void testPopulateQuoteWithUnexpectedTopic() {
-        PowerMockito.spy(QuoteDB.class);
         try {
-            Type quotesListType = new TypeToken<List<Quote>>(){}.getType();
-            List<Quote> quotesList = new Gson().fromJson(quotesJson, quotesListType);
-            PowerMockito.doCallRealMethod().when(QuoteDB.class, "populateQuotes");
-            PowerMockito.doReturn(quotesList).when(QuoteDB.class, "readQuotes");
             Whitebox.invokeMethod(QuoteDB.class, "populateQuotes");
             List<Quote> quotes = quoteDB.getQuotesFromTopic("not matchable", 0, 5);
             Assert.assertNotNull("Quotes are null for topic inspiration", quotes);
